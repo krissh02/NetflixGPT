@@ -1,10 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Header from './Header'
 import { checkValidData } from '../utils/validate';
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/firebase';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
+import { LOGIN_BG_IMG } from '../utils/constants';
 
 const Login = () => {
+    const dispatch = useDispatch();
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage,setErrorMessage] = useState(null);
     const name = useRef(null);
@@ -22,7 +26,15 @@ const Login = () => {
             createUserWithEmailAndPassword(auth, email.current.value,password.current.value)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
+                updateProfile(auth.currentUser, {
+                    displayName: name.current.value
+                  }).then(() => {
+                    const {uid,email,displayName} = auth.currentUser;
+                    dispatch(addUser({uid:uid,email:email,displayName:displayName}));
+                  }).catch((error) => {
+                    console.log(error.message);
+                  });
+
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -36,7 +48,6 @@ const Login = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                console.log(user);
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -55,7 +66,7 @@ const Login = () => {
     <div>
         <Header />
         <div className='absolute'>
-            <img src='https://assets.nflxext.com/ffe/siteui/vlv3/9d3533b2-0e2b-40b2-95e0-ecd7979cc88b/a3873901-5b7c-46eb-b9fa-12fea5197bd3/IN-en-20240311-popsignuptwoweeks-perspective_alpha_website_medium.jpg'/>
+            <img src={LOGIN_BG_IMG}/>
         </div>
         <form onSubmit={(e) => e.preventDefault()} className='absolute bg-black w-[28%] my-36 mx-auto right-0 left-0 px-20 py-6 flex flex-col bg-opacity-80 rounded-md'>
             <h1 className='text-white text-4xl font-bold my-5'>{isSignInForm? "Sign In" : "Sign Up"}</h1>
