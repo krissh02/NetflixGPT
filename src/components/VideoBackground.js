@@ -4,7 +4,8 @@ import useMovieTrailor from '../hooks/useMovieTrailor';
 
 const VideoBackground = ({id}) => {
     const trailerId = useSelector(store=> store.movies?.trailerVideo);
-
+    console.log(trailerId);
+    console.log(trailerId?.key);
     useMovieTrailor(id);
 
   return (

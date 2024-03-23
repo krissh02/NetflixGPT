@@ -44,14 +44,18 @@ const Header = () => {
       dispatch(changeLang(e.target.value));
     }
   return (
-    <div className='absolute pl-16 py-3 bg-gradient-to-b from-black w-screen z-10 flex justify-between items-center'>
-        <img alt='netflix-logo' src={NETFLIX_LOGO} className='w-48'></img>
-        {user && <div className='mr-6'>
-            {showGptSearch && <select className='p-2 px-6 bg-gray-800 text-white text-lg font-bold' onChange={handleChangeLang}>
+    <div className='absolute pl-16 py-3 bg-gradient-to-b from-black w-screen z-10 flex justify-between items-center flex-col md:flex-row'>
+        {
+          <a href='/browse'>
+            <img alt='netflix-logo' src={NETFLIX_LOGO} className='w-24 md:w-48'></img>
+          </a>
+        }
+        {user && <div className='mr-6 flex'>
+            {showGptSearch && <select className='p-2 px-6 bg-gray-800 text-white text-md md:text-lg font-bold' onChange={handleChangeLang}>
               { SUPPORTED_LANG.map(lang => <option key={lang.identifier} value={lang.identifier}>{lang.name}</option>)}
             </select>}
-            <button className='bg-purple-500 text-white rounded-lg px-4 py-2 mx-8 text-xl font-bold' onClick={handleGptSearchClick}>{showGptSearch? "Home Page": "Gpt Search"}</button>
-            <button className='font-bold text-2xl text-white mr-10' onClick={handleSignedOut}>Sign Out</button>
+            <button className='bg-purple-500 text-white rounded-lg px-3 md:px-4 py-1 md:py-2 mx-8 text-base md:text-xl font-bold hover:bg-opacity-75' onClick={handleGptSearchClick}>{showGptSearch? "Home Page": "Gpt Search"}</button>
+            <button className='px-4 p-2 rounded-full font-bold bg-red-700 text-sm md:text-2xl text-white mr-10 hover:bg-white hover:text-red-700' onClick={handleSignedOut}>Sign Out</button>
         </div>}
     </div>
   )
